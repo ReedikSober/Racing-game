@@ -14,7 +14,7 @@ def main_logic():
 
     player_1 = Player(input("Your name: "))
     player_1.printname()
-    player_car = Car(input("Your favourite car brand: "))
+    player_car = Car(input("Your favourite car: "))
 
     while True:
         try:
