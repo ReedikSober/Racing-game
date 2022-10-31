@@ -15,21 +15,20 @@ def start_page():
     while not game_ended:
         os.system('cls||clear')
         print("==========WELCOME TO THE==========")
-        print("===NEED FOR SPEED TERMINAL RACE===")
+        print("===NEED FOR SPEED TERMINAL RACE===\n")
         print("1. Start Race")
         print("2. Scoreboard")
         print("3. Quit Game")
-        print("Your choice: ")
 
         while True:
             try:
-                main_menu = int(input(""))
+                main_menu = int(input("\nYour choice: "))
                 if main_menu in range(1, 4):
                     break
             except ValueError:
-                print("Please select 1, 2 or 3")
+                print("\nPlease select 1, 2 or 3")
             else:
-                print("Please use a number from 1 to 3!")
+                print("\nPlease use a number from 1 to 3!")
 
         if main_menu == 1:
             main_logic()
@@ -46,7 +45,7 @@ def start_page():
 def main_logic():
 
     player_1 = Player(input("Your name: "))
-    print(f"Tell me more about yourself, {player_1.name}")
+    print(f"\nTell me more about yourself, {player_1.name}\n")
     player_car = Car(input("Your favourite car: "))
 
     while True:
@@ -55,9 +54,9 @@ def main_logic():
             if track_length in range(1, 10):
                 break
             else:
-                print("Write a number from 1 to 9")
+                print("\nWrite a number from 1 to 9")
         except ValueError:
-            print("Enter a number")
+            print("\nEnter a number")
 
     round_ended = False
     while not round_ended:
@@ -99,12 +98,12 @@ def main_logic():
                     z = z + speed_computer_max
                     print(*track_2, sep='')
                     print("")
-                    sleep(0.1)
+                    sleep(0.05)
 
                 else:
-                    print("=====FINISH=====")
+                    print("=====FINISH=====\n")
                     print(f"{player_1.name}'s speed: {player_car.speed}")
-                    print(f"Computer speed: {computer_car.speed}")
+                    print(f"Computer speed: {computer_car.speed}\n")
                     if c > z:
                         print(f"{player_1.name} WINS!")
                     elif z > c:
@@ -113,9 +112,9 @@ def main_logic():
                         print("It's a TIE!")
 
                 end_time = time.time()
-                total_time = "%.3f" % (end_time - start_time)
+                total_time = "%.2f" % (end_time - start_time)
 
-                print(total_time)
+                print(f"With {total_time} seconds!")
                 if c > z or c == z:
                     with open(f'scoreboard.csv', 'a') as f:
                         f.write(
@@ -125,7 +124,7 @@ def main_logic():
                 break
 
             while True:
-                another_round = input("Play another round? (y/n)")
+                another_round = input("\nPlay another round? (y/n)")
                 if another_round == "y":
                     turn_ended = True
                     break
@@ -160,7 +159,7 @@ def scoreboard():
     print("")
     while True:
         try:
-            user_input = int(input(""))
+            user_input = int(input())
             if user_input in range(1, 3):
                 break
         except ValueError:
@@ -169,7 +168,7 @@ def scoreboard():
             print("Please use a number from 1 to 2!")
     if user_input == 2:
         with open(f'scoreboard.csv', 'w'):
-            print("Scoreboard is cleared!")
+            print("\nScoreboard is cleared!")
             sleep(2)
 
 
