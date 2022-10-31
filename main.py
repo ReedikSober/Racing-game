@@ -119,7 +119,7 @@ def main_logic():
                     with open(f'scoreboard.csv', 'a') as f:
                         f.write(
                             f"Track {track_length}, {player_1.name} with {player_car.brand} going at "
-                            f"{player_car.speed} lpi_______,{total_time}\n"
+                            f"{player_car.speed} lpi_______,{total_time} seconds\n"
                         )
                 break
 
