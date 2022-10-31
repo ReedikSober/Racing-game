@@ -5,6 +5,7 @@ import sys
 import os
 import csv
 import operator
+import colorama
 from player import Player
 from car import Car
 
