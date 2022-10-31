@@ -1,4 +1,5 @@
 import time
+import colorama
 from time import sleep
 import random
 import sys
