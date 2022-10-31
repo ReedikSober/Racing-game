@@ -37,7 +37,8 @@ def start_page():
             scoreboard()
 
         elif main_menu == 3:
-            print("Thank you for playing")
+            print("\nThank you for playing")
+            sleep(2)
             os.system('cls||clear')
             game_ended = True
 
@@ -177,7 +178,7 @@ def track(xo, length):
     lane = list(xo)
     x = "_"
 
-    for i in range(length * 12):
+    for _ in range(length * 12):
         lane.append(x)
     return lane
 
