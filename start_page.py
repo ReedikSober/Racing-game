@@ -3,9 +3,11 @@
 def start_page():
     from main_logic import main_logic
     from scoreboard import scoreboard
+    import os
 
     game_ended = False
     while not game_ended:
+        os.system('cls||clear')
         print("==========WELCOME TO THE==========")
         print("===NEED FOR SPEED TERMINAL RACE===")
         print("1. Start Race")
@@ -31,4 +33,5 @@ def start_page():
 
         elif main_menu == 3:
             print("Thank you for playing")
+            os.system('cls||clear')
             game_ended = True

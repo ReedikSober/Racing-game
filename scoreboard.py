@@ -4,7 +4,8 @@ import operator
 
 
 def scoreboard():
-
+    import os
+    os.system('cls||clear')
     print("========== TOP PLAYERS ==========")
 
     data = csv.reader(

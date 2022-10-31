@@ -32,7 +32,7 @@ def main_logic():
         track_1 = track("X", track_length)
         track_2 = track("O", track_length)
         computer_car = Car()
-
+        os.system('cls||clear')
         print("")
         print("=====START=====")
         print("")
@@ -58,8 +58,6 @@ def main_logic():
                         track_1.insert(0, track_1.pop(len(track_1) - 1))
                     c = c + speed_player_max
                     print(*track_1, sep='')
-                    # sys.stdout.write("\r{0}>".format("="*i))
-
 
                     speed_computer = range(random.randint(1, computer_car.speed))
                     speed_computer_max = speed_computer[-1] + 1
@@ -72,8 +70,8 @@ def main_logic():
 
                 else:
                     print("=====FINISH=====")
-                    print(f"Player car speer: {player_car.speed}")
-                    print(f"Computer car speed: {computer_car.speed}")
+                    print(f"{player_1.name}'s speed: {player_car.speed}")
+                    print(f"Computer speed: {computer_car.speed}")
                     if c > z:
                         print(f"{player_1.name} WINS!")
                     elif z > c:
