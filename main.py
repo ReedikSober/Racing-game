@@ -139,14 +139,11 @@ def main_logic():
 
 def scoreboard():
 
-    absolute_path = os.path.dirname(__file__)
-    relative_path = "scoreboard.csv"
-    full_path = os.path.join(absolute_path, relative_path)
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
     data = csv.reader(
-        open(full_path),
+        open("scoreboard.csv"),
         delimiter=','
     )
 
