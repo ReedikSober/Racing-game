@@ -7,4 +7,3 @@ class Car:
 
         self.brand = brand
         self.speed = random.randint(2, 5)
-        # self.symbol = symbol
