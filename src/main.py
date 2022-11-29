@@ -5,50 +5,44 @@ import sys
 import os
 import csv
 import operator
-from player import Player
-from car import Car
+from src.player import Player
 
 
 def start_page():
+    os.system('cls||clear')
+    print("==========WELCOME TO THE==========")
+    print("===NEED FOR SPEED TERMINAL RACE===\n")
+    print("1. Start Race")
+    print("2. Scoreboard")
+    print("3. Quit Game")
 
-    game_ended = False
-    while not game_ended:
-        os.system('cls||clear')
-        print("==========WELCOME TO THE==========")
-        print("===NEED FOR SPEED TERMINAL RACE===\n")
-        print("1. Start Race")
-        print("2. Scoreboard")
-        print("3. Quit Game")
+    while True:
+        try:
+            main_menu_select = int(input("\nYour choice: "))
+            if main_menu_select in range(1, 4):
+                break
+        except ValueError:
+            print("\nPlease select 1, 2 or 3")
+        else:
+            print("\nPlease use a number from 1 to 3!")
 
-        while True:
-            try:
-                main_menu = int(input("\nYour choice: "))
-                if main_menu in range(1, 4):
-                    break
-            except ValueError:
-                print("\nPlease select 1, 2 or 3")
-            else:
-                print("\nPlease use a number from 1 to 3!")
+    user_options = {
+        1: start_race,
+        2: scoreboard,
+        3: exit_game
+    }
 
-        if main_menu == 1:
-            main_logic()
-
-        elif main_menu == 2:
-            scoreboard()
-
-        elif main_menu == 3:
-            print("\nThank you for playing")
-            sleep(2)
-            os.system('cls||clear')
-            game_ended = True
+    user_options[main_menu_select]()
 
 
-def main_logic():
+def create_player():
+    global player
+    player = [Player(input("Your name: ")) for i in range(3)]
+    return player
 
-    player_1 = Player(input("Your name: "))
-    print(f"\nTell me more about yourself, {player_1.name}\n")
-    player_car = Car(input("Your favourite car: "))
 
+def create_track():
+    global track_length
     while True:
         try:
             track_length = int(input("Track length: "))
@@ -59,85 +53,94 @@ def main_logic():
         except ValueError:
             print("\nEnter a number")
 
-    round_ended = False
-    while not round_ended:
+    return track_length
 
-        track_1 = track("X", track_length)
-        track_2 = track("O", track_length)
-        computer_car = Car()
-        os.system('cls||clear')
-        print("")
-        print("=====START=====")
-        print("")
-        print(*track_1, sep='')
-        print(*track_2, sep='')
-        print("")
 
-        c = 0
-        z = 0
+def exit_game():
+    print("\nThank you for playing")
+    sleep(2)
+    os.system('cls||clear')
+    exit()
 
-        turn_ended = False
-        while not turn_ended:
-            while True:
-                start_time = time.time()
 
-                while c < len(track_1) - 1 and z < len(track_2) - 1:
+def start_race():
+    create_player()
+    create_track()
+    main_logic()
 
-                    sys.stdout.write('\033[3A')
-                    speed_player = range(random.randint(1, player_car.speed))
-                    speed_player_max = speed_player[-1] + 1
-                    for _ in speed_player:
-                        track_1.insert(0, track_1.pop(len(track_1) - 1))
-                    c = c + speed_player_max
-                    print(*track_1, sep='')
 
-                    speed_computer = range(random.randint(1, computer_car.speed))
-                    speed_computer_max = speed_computer[-1] + 1
-                    for _ in speed_computer:
-                        track_2.insert(0, track_2.pop(len(track_2) - 1))
-                    z = z + speed_computer_max
-                    print(*track_2, sep='')
-                    print("")
-                    sleep(0.05)
+def game_engine():
+    pass
 
-                else:
-                    print("=====FINISH=====\n")
-                    print(f"{player_1.name}'s speed: {player_car.speed}")
-                    print(f"Computer speed: {computer_car.speed}\n")
-                    if c > z:
-                        print(f"{player_1.name} WINS!")
-                    elif z > c:
-                        print("Computer WINS!")
-                    elif c == z:
-                        print("It's a TIE!")
 
-                end_time = time.time()
-                total_time = "%.2f" % (end_time - start_time)
 
-                print(f"With {total_time} seconds!")
-                if c > z or c == z:
-                    with open(f'../scoreboard.csv', 'a') as f:
-                        f.write(
-                            f"Track {track_length}, {player_1.name} with {player_car.brand} going at "
-                            f"{player_car.speed} lpi_______,{total_time} seconds\n"
-                        )
-                break
 
-            while True:
-                another_round = input("\nPlay another round? (y/n)")
-                if another_round == "y":
-                    turn_ended = True
-                    break
-                elif another_round == "n":
-                    turn_ended = True
-                    round_ended = True
-                    break
-                else:
-                    print("Wrong option.")
+def main_logic():
+    track_1 = track("X", track_length)
+    track_2 = track("O", track_length)
+    computer_car = random.randint(2, 5)
+    c = 0
+    z = 0
+    os.system('cls||clear')
+    print("\n=====START=====\n")
+    print(*track_1, sep='')
+    print(*track_2, sep='')
+
+    while True:
+        start_time = time.time()
+        while c < len(track_1) - 1 and z < len(track_2) - 1:
+
+            sys.stdout.write('\033[4;0H')
+
+            speed_player = range(random.randint(1,
+                                                player.speed))  # make this a separate function, random function with seeds, user provides seeds
+            speed_player_max = speed_player[-1] + 1
+            for _ in speed_player:
+                track_1.insert(0, track_1.pop(len(track_1) - 1))
+            c = c + speed_player_max
+            print(*track_1, sep='')
+
+            speed_computer = range(random.randint(1, computer_car))
+            speed_computer_max = speed_computer[-1] + 1
+            for _ in speed_computer:
+                track_2.insert(0, track_2.pop(len(track_2) - 1))
+            z = z + speed_computer_max
+            print(*track_2, sep='')
+            sleep(0.07)
+
+        else:
+            print("\n=====FINISH=====\n")
+            print(f"{player.name}'s speed: {player.speed}")
+            print(f"Computer speed: {computer_car}\n")
+            if c > z:
+                print(f"{player.name} WINS!")
+            elif z > c:
+                print("Computer WINS!")
+            elif c == z:
+                print("It's a TIE!")
+
+        end_time = time.time()
+        total_time = "%.2f" % (end_time - start_time)
+
+        print(f"With {total_time} seconds!")
+        if c > z or c == z:
+            with open(f'../scoreboard.csv', 'a') as f:
+                f.write(
+                    f"Track {track_length}, {player.name} going at {player.speed} lpi_______,{total_time} seconds\n"
+                )
+        break
+
+    while True:
+        another_round = input("\nPlay another round? (y/n)")
+        if another_round == "y":
+            main_logic()
+        elif another_round == "n":
+            start_page()
+        else:
+            print("Wrong option.")
 
 
 def scoreboard():
-
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
@@ -167,10 +170,12 @@ def scoreboard():
         with open(f'../scoreboard.csv', 'w'):
             print("\nScoreboard is cleared!")
             sleep(2)
+            start_page()
+    else:
+        start_page()
 
 
 def track(xo, length):
-
     lane = list(xo)
     x = "_"
 
@@ -179,4 +184,8 @@ def track(xo, length):
     return lane
 
 
-start_page()
+if __name__ == '__main__':
+    start_page()
+
+# multiplayer
+# player provides a seed "do random"
