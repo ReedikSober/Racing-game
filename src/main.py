@@ -84,7 +84,6 @@ def main_logic():
                 while c < len(track_1) - 1 and z < len(track_2) - 1:
 
                     sys.stdout.write('\033[3A')
-
                     speed_player = range(random.randint(1, player_car.speed))
                     speed_player_max = speed_player[-1] + 1
                     for _ in speed_player:
@@ -117,7 +116,7 @@ def main_logic():
 
                 print(f"With {total_time} seconds!")
                 if c > z or c == z:
-                    with open(f'scoreboard.csv', 'a') as f:
+                    with open(f'../scoreboard.csv', 'a') as f:
                         f.write(
                             f"Track {track_length}, {player_1.name} with {player_car.brand} going at "
                             f"{player_car.speed} lpi_______,{total_time} seconds\n"
@@ -143,7 +142,7 @@ def scoreboard():
     print("========== TOP PLAYERS ==========\n")
 
     data = csv.reader(
-        open("scoreboard.csv"),
+        open("../scoreboard.csv"),
         delimiter=','
     )
 
@@ -165,7 +164,7 @@ def scoreboard():
         else:
             print("Please use a number from 1 to 2!")
     if user_input == 2:
-        with open(f'scoreboard.csv', 'w'):
+        with open(f'../scoreboard.csv', 'w'):
             print("\nScoreboard is cleared!")
             sleep(2)
 
