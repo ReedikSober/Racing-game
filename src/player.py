@@ -7,6 +7,6 @@ class Player:
         self.name = name
         self.speed = random.randint(2, 5)
         track = [j]
-        for i in range(100):
+        for _ in range(100):
             track.append("_")
         self.track = track
