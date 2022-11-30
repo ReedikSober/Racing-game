@@ -5,7 +5,7 @@ import sys
 import os
 import csv
 import operator
-from src.player import Player
+from player import Player
 
 
 def start_page():
@@ -35,100 +35,32 @@ def start_page():
     user_options[main_menu_select]()
 
 
-def create_player():
-    global player
-    player = [Player(input("Your name: ")) for i in range(3)]
-    return player
-
-
-def create_track():
-    global track_length
-    while True:
-        try:
-            track_length = int(input("Track length: "))
-            if track_length in range(1, 10):
-                break
-            else:
-                print("\nWrite a number from 1 to 9")
-        except ValueError:
-            print("\nEnter a number")
-
-    return track_length
-
-
-def exit_game():
-    print("\nThank you for playing")
-    sleep(2)
-    os.system('cls||clear')
-    exit()
-
-
 def start_race():
     create_player()
-    create_track()
     main_logic()
 
 
-def game_engine():
-    pass
+def create_player():
+    global player
+    j = -1
+    player = []
+    for i in range(5):
+        j += 1
+        player.append(Player(input(f"Player {j} name: "), j))
 
-
+    return player
 
 
 def main_logic():
-    track_1 = track("X", track_length)
-    track_2 = track("O", track_length)
-    computer_car = random.randint(2, 5)
-    c = 0
-    z = 0
+    global total_time
     os.system('cls||clear')
     print("\n=====START=====\n")
-    print(*track_1, sep='')
-    print(*track_2, sep='')
 
-    while True:
-        start_time = time.time()
-        while c < len(track_1) - 1 and z < len(track_2) - 1:
-
-            sys.stdout.write('\033[4;0H')
-
-            speed_player = range(random.randint(1,
-                                                player.speed))  # make this a separate function, random function with seeds, user provides seeds
-            speed_player_max = speed_player[-1] + 1
-            for _ in speed_player:
-                track_1.insert(0, track_1.pop(len(track_1) - 1))
-            c = c + speed_player_max
-            print(*track_1, sep='')
-
-            speed_computer = range(random.randint(1, computer_car))
-            speed_computer_max = speed_computer[-1] + 1
-            for _ in speed_computer:
-                track_2.insert(0, track_2.pop(len(track_2) - 1))
-            z = z + speed_computer_max
-            print(*track_2, sep='')
-            sleep(0.07)
-
-        else:
-            print("\n=====FINISH=====\n")
-            print(f"{player.name}'s speed: {player.speed}")
-            print(f"Computer speed: {computer_car}\n")
-            if c > z:
-                print(f"{player.name} WINS!")
-            elif z > c:
-                print("Computer WINS!")
-            elif c == z:
-                print("It's a TIE!")
-
-        end_time = time.time()
-        total_time = "%.2f" % (end_time - start_time)
-
-        print(f"With {total_time} seconds!")
-        if c > z or c == z:
-            with open(f'../scoreboard.csv', 'a') as f:
-                f.write(
-                    f"Track {track_length}, {player.name} going at {player.speed} lpi_______,{total_time} seconds\n"
-                )
-        break
+    start_time = time.time()
+    game_engine()
+    end_time = time.time()
+    total_time = "%.2f" % (end_time - start_time)
+    end_race()
 
     while True:
         another_round = input("\nPlay another round? (y/n)")
@@ -140,26 +72,59 @@ def main_logic():
             print("Wrong option.")
 
 
+def game_engine():
+    global winner
+    j = -1
+
+    while True:
+        sys.stdout.write('\033[4;0H')
+        for _ in player:
+            j += 1
+            player_random_speed = random.randint(1, player[j].speed)
+            position_1 = player[j].track.index(j)
+            position_2 = position_1 + player_random_speed
+            player[j].track.pop(position_1)
+            player[j].track.insert(position_2, j)
+            print(*player[j].track, sep='')
+            if player[j].track[-1] == j:
+                winner = player[j]
+                return winner
+
+        sleep(0.1)
+        j = -1
+
+
+def end_race():
+    j = -1
+    print("\n\n=====FINISH=====\n")
+    for _ in player:
+        j += 1
+        print(f"{player[j].name}'s speed: {player[j].speed}")
+        position_1 = player[j].track.index(j)
+        player[j].track.pop(position_1)
+        player[j].track.insert(0, j)
+    print(f"{winner.name} WINS!")
+    print(f"With {total_time} seconds!")
+    with open(f'../scoreboard.csv', 'a') as f:
+        f.write(f"{winner.name} ________________________,{total_time} seconds\n")
+
+
 def scoreboard():
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
-    data = csv.reader(
-        open("../scoreboard.csv"),
-        delimiter=','
-    )
+    data = csv.reader(open("../scoreboard.csv"), delimiter=',')
+    data = sorted(data, key=operator.itemgetter(1))
 
-    data = sorted(data, key=operator.itemgetter(0, 2))
     for i in data:
         print(*i, sep='')
-    print("")
-    print("What's next?")
+    print("\nWhat's next?")
     print("1. Return to main menu")
-    print("2. Clear Scoreboard")
-    print("")
+    print("2. Clear Scoreboard\n")
+
     while True:
         try:
-            user_input = int(input())
+            user_input = int(input("Your choice: "))
             if user_input in range(1, 3):
                 break
         except ValueError:
@@ -175,17 +140,14 @@ def scoreboard():
         start_page()
 
 
-def track(xo, length):
-    lane = list(xo)
-    x = "_"
-
-    for _ in range(length * 12):
-        lane.append(x)
-    return lane
+def exit_game():
+    print("\nThank you for playing")
+    sleep(2)
+    os.system('cls||clear')
+    exit()
 
 
 if __name__ == '__main__':
     start_page()
 
-# multiplayer
 # player provides a seed "do random"

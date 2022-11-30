@@ -3,10 +3,10 @@ import random
 
 class Player:
 
-    def __init__(self, name):
+    def __init__(self, name, j):
         self.name = name
         self.speed = random.randint(2, 5)
-        lane = []
-        for _ in range(50):
-            lane.append("_")
-        self.track = lane
+        track = [j]
+        for _ in range(100):
+            track.append("_")
+        self.track = track
