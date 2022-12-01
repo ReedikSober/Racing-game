@@ -82,28 +82,31 @@ def main_logic():
 
 def game_engine():
     global winner
+    finish = False
+    winner = []
     j = -1
-
     while True:
         sys.stdout.write('\033[4;0H')
         for _ in player:
             j += 1
-            player_random_speed = random.randint(1, player[j].speed)
+            player_random_speed = random.randint(2, player[j].speed)
             position_1 = player[j].track.index(player[j].name[:2])
             position_2 = position_1 + player_random_speed
             player[j].track.pop(position_1)
             player[j].track.insert(position_2, player[j].name[:2])
             print(*player[j].track, sep='')
             if player[j].track[-1] == player[j].name[:2]:
-                winner = player[j]
-                return winner
-
+                winner.append(player[j])
+                finish = True
+        if finish:
+            return winner
         sleep(0.1)
         j = -1
 
 
 def end_race():
     j = -1
+    i = -1
     sys.stdout.write(f'\033[{len(player) + 6};0H')
     print("=====FINISH=====\n")
     for _ in player:
@@ -111,10 +114,13 @@ def end_race():
         position_1 = player[j].track.index(player[j].name[:2])
         player[j].track.pop(position_1)
         player[j].track.insert(0, player[j].name[:2])
-    print(f"{winner.name} WINS!")
+
+    for _ in winner:
+        i += 1
+        print(f"{winner[i].name} WINS!")
+        with open(f'../scoreboard.csv', 'a') as f:
+            f.write(f"{winner[i].name} ________________________,{total_time} seconds\n")
     print(f"With {total_time} seconds!")
-    with open(f'../scoreboard.csv', 'a') as f:
-        f.write(f"{winner.name} ________________________,{total_time} seconds\n")
 
 
 def scoreboard():
@@ -139,6 +145,7 @@ def scoreboard():
             print("Please select 1 or 2")
         else:
             print("Please use a number from 1 to 2!")
+
     if user_input == 2:
         with open(f'../scoreboard.csv', 'w'):
             print("\nScoreboard is cleared!")
@@ -158,4 +165,4 @@ def exit_game():
 if __name__ == '__main__':
     start_page()
 
-# player provides a seed "do random"
+# next update: Improve randomizer: player provides a seed "do random"
