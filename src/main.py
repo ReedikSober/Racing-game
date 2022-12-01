@@ -7,6 +7,10 @@ import csv
 import operator
 from player import Player
 
+player = []
+winner = []
+total_time = None
+
 
 def start_page():
     os.system('cls||clear')
@@ -41,7 +45,6 @@ def start_race():
 
 
 def create_player():
-    global player
     number_of_players = 0
     while True:
         try:
@@ -52,11 +55,9 @@ def create_player():
         else:
             break
     j = 0
-    player = []
     for i in range(number_of_players):
         j += 1
         player.append(Player(input(f"Player {j} name: ")))
-    return player
 
 
 def main_logic():
@@ -71,7 +72,7 @@ def main_logic():
     end_race()
 
     while True:
-        another_round = input("\nPlay another round? (y/n)")
+        another_round = input("\nPlay another round? (y/n): ")
         if another_round == "y":
             main_logic()
         elif another_round == "n":
