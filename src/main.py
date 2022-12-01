@@ -44,10 +44,9 @@ def create_player():
     global player
     j = -1
     player = []
-    for i in range(5):
+    for i in input("Number of players: "):
         j += 1
         player.append(Player(input(f"Player {j} name: "), j))
-
     return player
 
 
