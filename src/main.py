@@ -42,11 +42,20 @@ def start_race():
 
 def create_player():
     global player
-    j = -1
+    number_of_players = 0
+    while True:
+        try:
+            number_of_players = int(input("Number of players: "))
+        except ValueError:
+            print("Please, enter a number")
+            continue
+        else:
+            break
+    j = 0
     player = []
-    for i in input("Number of players: "):
+    for i in range(number_of_players):
         j += 1
-        player.append(Player(input(f"Player {j} name: "), j))
+        player.append(Player(input(f"Player {j} name: ")))
     return player
 
 
@@ -80,12 +89,12 @@ def game_engine():
         for _ in player:
             j += 1
             player_random_speed = random.randint(1, player[j].speed)
-            position_1 = player[j].track.index(j)
+            position_1 = player[j].track.index(player[j].name[:2])
             position_2 = position_1 + player_random_speed
             player[j].track.pop(position_1)
-            player[j].track.insert(position_2, j)
+            player[j].track.insert(position_2, player[j].name[:2])
             print(*player[j].track, sep='')
-            if player[j].track[-1] == j:
+            if player[j].track[-1] == player[j].name[:2]:
                 winner = player[j]
                 return winner
 
@@ -95,13 +104,13 @@ def game_engine():
 
 def end_race():
     j = -1
-    print("\n\n=====FINISH=====\n")
+    sys.stdout.write(f'\033[{len(player) + 6};0H')
+    print("=====FINISH=====\n")
     for _ in player:
         j += 1
-        print(f"{player[j].name}'s speed: {player[j].speed}")
-        position_1 = player[j].track.index(j)
+        position_1 = player[j].track.index(player[j].name[:2])
         player[j].track.pop(position_1)
-        player[j].track.insert(0, j)
+        player[j].track.insert(0, player[j].name[:2])
     print(f"{winner.name} WINS!")
     print(f"With {total_time} seconds!")
     with open(f'../scoreboard.csv', 'a') as f:
