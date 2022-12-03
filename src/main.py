@@ -45,7 +45,9 @@ def start_race():
 
 
 def create_player():
+    global player
     number_of_players = 0
+    player = []
     while True:
         try:
             number_of_players = int(input("Number of players: "))
@@ -120,7 +122,7 @@ def end_race():
         i += 1
         print(f"{winner[i].name} WINS!")
         with open(f'../scoreboard.csv', 'a') as f:
-            f.write(f"{winner[i].name} ________________________,{total_time} seconds\n")
+            f.write(f"{winner[i].name} ___________________,{total_time} seconds\n")
     print(f"With {total_time} seconds!")
 
 
@@ -128,8 +130,9 @@ def scoreboard():
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
-    data = csv.reader(open("../scoreboard.csv"), delimiter=',')
-    data = sorted(data, key=operator.itemgetter(1))
+    with open("../scoreboard.csv") as f:
+        data = csv.reader(f, delimiter=',')
+        data = sorted(data, key=operator.itemgetter(1))
 
     for i in data:
         print(*i, sep='')
