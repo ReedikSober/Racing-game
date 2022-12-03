@@ -59,7 +59,7 @@ def create_player():
     j = 0
     for i in range(number_of_players):
         j += 1
-        player.append(Player(input(f"Player {j} name: ")))
+        player.append(Player(input(f"Player {j} name: "), j))
 
 
 def main_logic():
@@ -174,3 +174,4 @@ if __name__ == '__main__':
     start_page()
 
 # next update: Improve randomizer: player provides a seed "do random"
+# use decorator to track time in main_logic()
