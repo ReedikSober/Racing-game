@@ -127,6 +127,7 @@ def end_race():
 
 
 def scoreboard():
+    j = 0
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
@@ -135,7 +136,10 @@ def scoreboard():
         data = sorted(data, key=operator.itemgetter(1))
 
     for i in data:
+        j += 1
         print(*i, sep='')
+        if j == 10:
+            break
     print("\nWhat's next?")
     print("1. Return to main menu")
     print("2. Clear Scoreboard\n")
