@@ -125,12 +125,12 @@ def scoreboard():
     with open("../scoreboard.csv") as f:
         data = csv.reader(f, delimiter=',')
         data = sorted(data, key=operator.itemgetter(1))
-
     for i in data:
         j += 1
         print(*i, sep='')
         if j == 10:
             break
+
     print("\nWhat's next?")
     print("1. Return to main menu")
     print("2. Clear Scoreboard\n")
