@@ -56,10 +56,8 @@ def create_player():
             continue
         else:
             break
-    j = 0
     for i in range(number_of_players):
-        j += 1
-        player.append(Player(input(f"Player {j} name: ") or str(j)))
+        player.append(Player(input(f"Player {i + 1} name: ") or str(i + 1)))
 
 
 def main_logic():
@@ -87,42 +85,35 @@ def game_engine():
     global winner
     finish = False
     winner = []
-    j = -1
     while True:
         sys.stdout.write('\033[4;0H')
-        for _ in player:
-            j += 1
-            player_random_speed = random.randint(2, player[j].speed)
-            position_1 = player[j].track.index(player[j].name[:2])
+        for count, _ in enumerate(player):
+            player_random_speed = random.randint(2, player[count].speed)
+            position_1 = player[count].track.index(player[count].name[:2])
             position_2 = position_1 + player_random_speed
-            player[j].track.pop(position_1)
-            player[j].track.insert(position_2, player[j].name[:2])
-            print(*player[j].track, sep='')
-            if player[j].track[-1] == player[j].name[:2]:
-                winner.append(player[j])
+            player[count].track.pop(position_1)
+            player[count].track.insert(position_2, player[count].name[:2])
+            print(*player[count].track, sep='')
+            if player[count].track[-1] == player[count].name[:2]:
+                winner.append(player[count])
                 finish = True
         if finish:
             return winner
         sleep(0.1)
-        j = -1
 
 
 def end_race():
-    j = -1
-    i = -1
     sys.stdout.write(f'\033[{len(player) + 6};0H')
     print("=====FINISH=====\n")
-    for _ in player:
-        j += 1
-        position_1 = player[j].track.index(player[j].name[:2])
-        player[j].track.pop(position_1)
-        player[j].track.insert(0, player[j].name[:2])
+    for count, _ in enumerate(player):
+        position_1 = player[count].track.index(player[count].name[:2])
+        player[count].track.pop(position_1)
+        player[count].track.insert(0, player[count].name[:2])
 
-    for _ in winner:
-        i += 1
-        print(f"{winner[i].name} WINS!")
+    for count, _ in enumerate(winner):
+        print(f"{winner[count].name} WINS!")
         with open(f'../scoreboard.csv', 'a') as f:
-            f.write(f"{winner[i].name} ___________________,{total_time} seconds\n")
+            f.write(f"{winner[count].name} ___________________,{total_time} seconds\n")
     print(f"With {total_time} seconds!")
 
 
@@ -173,5 +164,9 @@ def exit_game():
 if __name__ == '__main__':
     start_page()
 
+
 # next update: Improve randomizer: player provides a seed "do random"
 # use decorator to track time in main_logic()
+# game class for track reset and creation, winner,
+# data sorting before storing
+# GUI
