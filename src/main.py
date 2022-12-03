@@ -59,7 +59,7 @@ def create_player():
     j = 0
     for i in range(number_of_players):
         j += 1
-        player.append(Player(input(f"Player {j} name: "), j))
+        player.append(Player(input(f"Player {j} name: ") or str(j)))
 
 
 def main_logic():
