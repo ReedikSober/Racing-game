@@ -136,22 +136,16 @@ def scoreboard():
     print("2. Clear Scoreboard\n")
 
     while True:
-        try:
-            user_input = int(input("Your choice: "))
-            if user_input in range(1, 3):
-                break
-        except ValueError:
-            print("Please select 1 or 2")
-        else:
-            print("Please use a number from 1 to 2!")
-
-    if user_input == 2:
-        with open(f'../scoreboard.csv', 'w'):
-            print("\nScoreboard is cleared!")
-            sleep(2)
+        user_input = input("Your choice: ")
+        if user_input == "1":
             start_page()
-    else:
-        start_page()
+        elif user_input == "2":
+            with open(f'../scoreboard.csv', 'w'):
+                print("\nScoreboard is cleared!")
+                sleep(2)
+                start_page()
+        else:
+            print("Please select 1 or 2")
 
 
 def exit_game():
