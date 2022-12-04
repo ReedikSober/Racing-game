@@ -10,7 +10,7 @@ from player import Player
 
 player = []
 winner = []
-total_time = None
+total_time = 0.00
 absolute_path = os.path.dirname(__file__)
 path_to_scoreboard = os.path.join(absolute_path, "scoreboard.csv")
 with open(path_to_scoreboard, 'a'):
@@ -24,7 +24,7 @@ def timeit(func):
         start_time = time.perf_counter()
         result = func(*args, **kwargs)
         end_time = time.perf_counter()
-        total_time = "%.2f" % (end_time - start_time)
+        total_time = float("%.2f" % (end_time - start_time))
         return result
 
     return timeit_wrapper
@@ -111,10 +111,8 @@ def game_engine():
             print(*player[count].track, sep='')
 
             if player[count].track[-1] == player[count].name[:2]:
-                winner.append(player[count])
-                # win = Results(player[count].name)
+                winner.append(Results(player[count].name))
                 finish = True
-
         if finish:
             return winner
         sleep(0.1)
@@ -128,11 +126,7 @@ def end_race():
         player[count].track.pop(position_1)
         player[count].track.insert(0, player[count].name[:2])
 
-    for count, _ in enumerate(winner):
-        print(f"{winner[count].name} WINS!")
-        with open(path_to_scoreboard, 'a') as f:
-            f.write(f"{total_time},{winner[count].name}\n")
-    print(f"With {total_time} seconds!")
+    save_results()
 
 
 def scoreboard():
@@ -167,41 +161,51 @@ def exit_game():
 
 @dataclass
 class Results:
-    winner_time: float
-    winner_name: str
+    name: str = "No Name"
+    time: float = 0
 
     def list_out(self):
-        return [self.winner_time, self.winner_name]
+        return [self.time, self.name]
 
 
 def show_result():
     with open(path_to_scoreboard, "r") as f:
         reader = csv.reader(f, delimiter=',')
-        for line in reader:
-            print(f"{line[1]} ___________________ {line[0]} seconds")
-            # if count == 10:
-            #     break
+        for count, line in enumerate(reader):
+            res = Results(
+                time=float(line[0]),
+                name=str(line[1])
+            )
+            print(f"{count + 1}. {res.name} ________________ "
+                  f"\033[{count + 3};21H {res.time} seconds")
 
 
-def save_results(score: list):
-    temp = []
+def save_results():
+    tmp = []
     with open(path_to_scoreboard, 'r') as f:
         reader = csv.reader(f, delimiter=',')
-        for line in reader:
-            temp.append(line)
-
-        temp.sort(key=lambda x: float(x[3]))
-        for i in range(1, len(temp) + 1):
-            temp[i - 1][0] = i
+        for count, line in enumerate(reader):
+            res = Results(
+                time=float(line[0]),
+                name=str(line[1])
+            )
+            tmp.append(res)
+            if count == 8:
+                break
+        for count, _ in enumerate(winner):
+            new_res = Results(
+                time=float(total_time),
+                name=str(winner[count].name)
+            )
+            tmp.append(new_res)
+            print(f"{winner[count].name} WINS!")
+        print(f"With {total_time} seconds!")
+        tmp.sort(key=lambda x: float(x.time))
     with open(path_to_scoreboard, 'w', newline="") as f2:
         writer = csv.writer(f2, delimiter=',')
-        writer.writerows(temp)
-
-    # for i in winner:
-    #     temp.append(0, *score)
-    #     print(f"{winner[count].name} WINS!")
-    #         f.write(f"{winner[count].name} ___________________,{total_time} seconds\n")
-    # print(f"With {total_time} seconds!")
+        for res in tmp:
+            out = res.list_out()
+            writer.writerow(out)
 
 
 if __name__ == '__main__':
@@ -209,5 +213,4 @@ if __name__ == '__main__':
 
 # next update: Improve randomizer: player provides a seed "do random"
 # game class for track reset and creation, winner,
-# data sorting before storing for scoreboard
 # GUI
