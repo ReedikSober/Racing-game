@@ -1,15 +1,33 @@
 import time
+from dataclasses import dataclass
 from time import sleep
+from functools import wraps
 import random
 import sys
 import os
 import csv
-import operator
 from player import Player
 
 player = []
 winner = []
 total_time = None
+absolute_path = os.path.dirname(__file__)
+path_to_scoreboard = os.path.join(absolute_path, "scoreboard.csv")
+with open(path_to_scoreboard, 'a'):
+    pass
+
+
+def timeit(func):
+    @wraps(func)
+    def timeit_wrapper(*args, **kwargs):
+        global total_time
+        start_time = time.perf_counter()
+        result = func(*args, **kwargs)
+        end_time = time.perf_counter()
+        total_time = "%.2f" % (end_time - start_time)
+        return result
+
+    return timeit_wrapper
 
 
 def start_page():
@@ -61,14 +79,10 @@ def create_player():
 
 
 def main_logic():
-    global total_time
     os.system('cls||clear')
     print("\n=====START=====\n")
 
-    start_time = time.time()
     game_engine()
-    end_time = time.time()
-    total_time = "%.2f" % (end_time - start_time)
     end_race()
 
     while True:
@@ -81,6 +95,7 @@ def main_logic():
             print("Wrong option.")
 
 
+@timeit
 def game_engine():
     global winner
     finish = False
@@ -94,9 +109,12 @@ def game_engine():
             player[count].track.pop(position_1)
             player[count].track.insert(position_2, player[count].name[:2])
             print(*player[count].track, sep='')
+
             if player[count].track[-1] == player[count].name[:2]:
                 winner.append(player[count])
+                # win = Results(player[count].name)
                 finish = True
+
         if finish:
             return winner
         sleep(0.1)
@@ -112,24 +130,16 @@ def end_race():
 
     for count, _ in enumerate(winner):
         print(f"{winner[count].name} WINS!")
-        with open(f'../scoreboard.csv', 'a') as f:
-            f.write(f"{winner[count].name} ___________________,{total_time} seconds\n")
+        with open(path_to_scoreboard, 'a') as f:
+            f.write(f"{total_time},{winner[count].name}\n")
     print(f"With {total_time} seconds!")
 
 
 def scoreboard():
-    j = 0
     os.system('cls||clear')
     print("========== TOP PLAYERS ==========\n")
 
-    with open("../scoreboard.csv") as f:
-        data = csv.reader(f, delimiter=',')
-        data = sorted(data, key=operator.itemgetter(1))
-    for i in data:
-        j += 1
-        print(*i, sep='')
-        if j == 10:
-            break
+    show_result()
 
     print("\nWhat's next?")
     print("1. Return to main menu")
@@ -140,7 +150,7 @@ def scoreboard():
         if user_input == "1":
             start_page()
         elif user_input == "2":
-            with open(f'../scoreboard.csv', 'w'):
+            with open(path_to_scoreboard, 'w'):
                 print("\nScoreboard is cleared!")
                 sleep(2)
                 start_page()
@@ -155,12 +165,49 @@ def exit_game():
     exit()
 
 
+@dataclass
+class Results:
+    winner_time: float
+    winner_name: str
+
+    def list_out(self):
+        return [self.winner_time, self.winner_name]
+
+
+def show_result():
+    with open(path_to_scoreboard, "r") as f:
+        reader = csv.reader(f, delimiter=',')
+        for line in reader:
+            print(f"{line[1]} ___________________ {line[0]} seconds")
+            # if count == 10:
+            #     break
+
+
+def save_results(score: list):
+    temp = []
+    with open(path_to_scoreboard, 'r') as f:
+        reader = csv.reader(f, delimiter=',')
+        for line in reader:
+            temp.append(line)
+
+        temp.sort(key=lambda x: float(x[3]))
+        for i in range(1, len(temp) + 1):
+            temp[i - 1][0] = i
+    with open(path_to_scoreboard, 'w', newline="") as f2:
+        writer = csv.writer(f2, delimiter=',')
+        writer.writerows(temp)
+
+    # for i in winner:
+    #     temp.append(0, *score)
+    #     print(f"{winner[count].name} WINS!")
+    #         f.write(f"{winner[count].name} ___________________,{total_time} seconds\n")
+    # print(f"With {total_time} seconds!")
+
+
 if __name__ == '__main__':
     start_page()
 
-
 # next update: Improve randomizer: player provides a seed "do random"
-# use decorator to track time in main_logic()
 # game class for track reset and creation, winner,
-# data sorting before storing
+# data sorting before storing for scoreboard
 # GUI
