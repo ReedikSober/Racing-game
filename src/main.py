@@ -10,7 +10,7 @@ from player import Player
 
 player = []
 winner = []
-total_time = 0.00
+total_time = float
 absolute_path = os.path.dirname(__file__)
 path_to_scoreboard = os.path.join(absolute_path, "scoreboard.csv")
 with open(path_to_scoreboard, 'a'):
