@@ -81,11 +81,11 @@ def create_player():
 def main_logic():
     os.system('cls||clear')
     print("\n=====START=====\n")
-
     game_engine()
     end_race()
 
     while True:
+
         another_round = input("\nPlay another round? (y/n): ")
         if another_round == "y":
             main_logic()
@@ -210,7 +210,3 @@ def save_results():
 
 if __name__ == '__main__':
     start_page()
-
-# next update: Improve randomizer: player provides a seed "do random"
-# game class for track reset and creation, winner,
-# GUI
