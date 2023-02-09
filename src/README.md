@@ -5,3 +5,5 @@ This code is written within
 the framework of a study course.
 
 To launch the came, execute main.py file.
+
+NB! os.system('cls||clear') does not function perfectly across all platforms.
