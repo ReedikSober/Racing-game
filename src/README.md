@@ -6,4 +6,4 @@ the framework of a study course.
 
 To launch the came, execute main.py file.
 
-NB! os.system('cls||clear') does not function perfectly across all platforms.
+NB! os.system('cls||clear') works as intended on windows systems but is untested on other platforms.
